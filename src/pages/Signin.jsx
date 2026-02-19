@@ -64,7 +64,7 @@ const Signin = () => {
                         <button className='absolute right-3 top-3 text-gray-500' onClick={() => setshowPassword(prev => !prev)}>{!showPassword ? <IoEye /> : <IoMdEyeOff />}</button>
                     </div>
                 </div>
-                <div className="text-right mb-4 text-[#ff4d2d] font-medium underline " onClick={()=>navigate("forget-password")}>forget password?</div>
+                <div className="text-right mb-4 text-[#ff4d2d] font-medium underline  cursor-pointer" onClick={()=>navigate("/forget-password")}>forget password?</div>
                 <button  type='submit' className={`text-center w-full border rounded-lg mt-4 px-4 py-2 flex justify-center gap-2  transition duration-200 bg-[#ff4d2d] hover:bg-[green] text-white cursor-pointer`} 
                     //  onClick={handleSignup}
                      >
