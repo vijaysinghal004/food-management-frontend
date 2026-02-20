@@ -22,21 +22,25 @@ const ForgetPassword = () => {
     const [isLoading1, setIsLoading1] = useState(false);
     const [isLoading2, setIsLoading2] = useState(false);
     const [isLoading3, setIsLoading3] = useState(false);
+    const [err,setErr]=useState("");
     const navigate = useNavigate();
 
 
     const handleSendOtp = async () => {
         if (!email) {
-            alert("Email is required");
+            setErr("email is required");
+            // alert("Email is required");
             return;
         }
         try {
             setIsLoading1(true);
             const result = await axios.post("http://localhost:8080/api/auth/send-otp", { email }, { withCredentials: true })
             console.log(result);
+            setErr("");
             setStep(2);
         } catch (err) {
-            alert(err?.response?.data?.message);
+            setErr(err?.response?.data?.message);
+            // alert(err?.response?.data?.message);
             console.log(err?.response?.data.message);
         } finally {
             setIsLoading1(false);
@@ -52,9 +56,11 @@ const ForgetPassword = () => {
             setIsLoading2(true);
             const result = await axios.post("http://localhost:8080/api/auth/verify-otp", { email, otp }, { withCredentials: true })
             console.log(result);
+            setErr("");
             setStep(3);
         } catch (err) {
-            alert(err?.response?.data?.message);
+            setErr(err?.response?.data?.message);
+            // alert(err?.response?.data?.message);
             console.log(err.response.data.message);
         } finally {
             setIsLoading2(false);
@@ -74,9 +80,11 @@ const ForgetPassword = () => {
             const result = await axios.post("http://localhost:8080/api/auth/reset-password", { email, newPassword, confirmPassword }, { withCredentials: true })
             console.log(result);
             setEmail("");
+            setErr("");
             navigate("/signIn")
         } catch (err) {
-            alert(err?.response?.data?.message);
+            setErr(err?.response?.data?.message);
+            // alert(err?.response?.data?.message);
             console.log(err.message);
         } finally {
             setIsLoading3(false);
@@ -98,6 +106,9 @@ const ForgetPassword = () => {
                             <label htmlFor="email" className='block text-gray-700 font-medium mb-1'>Email</label>
                             <input id="email" type="email" className='w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500' value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Enter your email' style={{ border: `1px solid ${borderColor}` }} />
                         </div>
+                        <p className='text-red-400 text-center underline'>
+                            {err}
+                        </p>
                         <button
                             type='button'
                             className={`text-center w-full border rounded-lg mt-4 px-4 py-2 flex justify-center gap-2  transition duration-200 bg-[#ff4d2d] hover:bg-[#e64323] text-white cursor-pointer disabled:opacity-70`}
@@ -115,6 +126,9 @@ const ForgetPassword = () => {
                             <label htmlFor="otp" className='block text-gray-700 font-medium mb-1'> Enter Otp</label>
                             <input id="otp" type="text" className='w-full border rounded-lg px-3 py-2 focus:outline-none focus:border-orange-500' value={otp} onChange={(e) => setOtp(e.target.value)} placeholder='Enter 6 digits Otp' style={{ border: `1px solid ${borderColor}` }} />
                         </div>
+                           <p className='text-red-400 text-center underline'>
+                            {err}
+                        </p>
                         <button
                             type='button'
                             className={`text-center w-full border rounded-lg mt-4 px-4 py-2 flex justify-center gap-2  transition duration-200 bg-[#ff4d2d] hover:bg-[#e64323] text-white cursor-pointer disabled:opacity-70`}
@@ -143,6 +157,9 @@ const ForgetPassword = () => {
                                 <button className='absolute right-3 top-3 text-gray-500' onClick={() => setshowConfirmPassword(prev => !prev)}>{!showConfirmPassword ? <IoEye /> : <IoMdEyeOff />}</button>
                             </div>
                         </div>
+                           <p className='text-red-400 text-center underline'>
+                            {err}
+                        </p>
                         <button
                             type='button'
                             className={`text-center w-full border rounded-lg mt-4 px-4 py-2 flex justify-center gap-2  transition duration-200 bg-[#ff4d2d] hover:bg-[#e64323] text-white cursor-pointer disabled:opacity-70`}
