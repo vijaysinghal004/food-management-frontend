@@ -8,6 +8,7 @@ import { serverUrl } from '../App';
 import axios from 'axios';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
+import { useDispatch } from 'react-redux';
 
 
 
@@ -25,6 +26,7 @@ const Signin = () => {
     const [password, setPassword] = useState("");
     const [err,setErr]=useState("");
     const navigate = useNavigate();
+    const dispatch=useDispatch();
 
 
 
@@ -37,6 +39,7 @@ const Signin = () => {
                     password,
                 },
                 { withCredentials: true });
+                                dispatch(setUserData(result.data.user));
             console.log(result);
             navigate("/");
             setErr("");
@@ -63,6 +66,7 @@ const Signin = () => {
                     mobileno
                 }, { withCredentials: true }
             )
+                            dispatch(setUserData(data.user));
             console.log(data);
             navigate("/");
             setErr("");
