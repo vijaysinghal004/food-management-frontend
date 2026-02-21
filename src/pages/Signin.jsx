@@ -9,6 +9,7 @@ import axios from 'axios';
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth } from '../../firebase';
 import { useDispatch } from 'react-redux';
+import { setUserData } from '../redux/userSlice';
 
 
 
@@ -24,9 +25,9 @@ const Signin = () => {
     const [email, setEmail] = useState("");
     const [mobileno, setMobileno] = useState("");
     const [password, setPassword] = useState("");
-    const [err,setErr]=useState("");
+    const [err, setErr] = useState("");
     const navigate = useNavigate();
-    const dispatch=useDispatch();
+    const dispatch = useDispatch();
 
 
 
@@ -39,7 +40,7 @@ const Signin = () => {
                     password,
                 },
                 { withCredentials: true });
-                                dispatch(setUserData(result.data.user));
+            dispatch(setUserData(result.data.user));
             console.log(result);
             navigate("/");
             setErr("");
@@ -61,13 +62,11 @@ const Signin = () => {
                 {
                     fullName: result.user.displayName,
                     email: result.user.email,
-                    role,
-                    password,
-                    mobileno
                 }, { withCredentials: true }
             )
-                            dispatch(setUserData(data.user));
             console.log(data);
+            console.log("hii")
+            dispatch(setUserData(data.user));
             navigate("/");
             setErr("");
         } catch (err) {
@@ -106,12 +105,12 @@ const Signin = () => {
                     >
                         Signin
                     </button>
-                     <p className='text-red-500 text-center underline'>
-                    {err}
-                </p>
-                    <button 
-                    onClick={handleGoogleAuth}
-                    className='w-full mt-4 px-4 py-2 flex items-center justify-center gap-2  border rounded-lg transition duration-200 border-gray-400 hover:bg-gray-100'>
+                    <p className='text-red-500 text-center underline'>
+                        {err}
+                    </p>
+                    <button
+                        onClick={handleGoogleAuth}
+                        className='w-full mt-4 px-4 py-2 flex items-center justify-center gap-2  border rounded-lg transition duration-200 border-gray-400 hover:bg-gray-100'>
                         <FcGoogle size={20} />
                         <span>Sign in with Google</span>
                     </button>

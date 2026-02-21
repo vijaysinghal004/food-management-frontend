@@ -75,8 +75,8 @@ const SignUp = () => {
                 }, { withCredentials: true }
             )
             setErr("");
+            console.log(data.user);
                 dispatch(setUserData(data.user))
-            console.log(data);
             navigate("/");
         } catch (err) {
             //    console.log(err);

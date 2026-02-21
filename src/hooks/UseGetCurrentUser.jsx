@@ -6,7 +6,7 @@ import { setUserData } from "../redux/userSlice";
 
 function useGetCurrentUser() {
     const dispatch=useDispatch();
-    useEffect(() => {
+    useEffect(() => { 
         const fetchuser = async () => {
             try {
                 const result = await axios.get("http://localhost:8080/api/user/current", { withCredentials: true });
