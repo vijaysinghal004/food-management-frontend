@@ -11,11 +11,15 @@ import useGetMyShop from './hooks/UseGetMyShop.jsx';
 import CreateEditShop from './pages/CreateEditShop.jsx';
 import AddItem from './pages/AddItem.jsx';
 import EditItem from './pages/EditItem.jsx';
+import UseGetShopByCity from './hooks/UseGetShopByCity.jsx';
+import UseGetItemByCity from './hooks/UseGetItemByCity.jsx';
  export const serverUrl='http://localhost:8080';
 const App = () => {
   useGetCurrentUser();
   UseGetCity();
-  useGetMyShop()
+  useGetMyShop();
+  UseGetShopByCity();
+  UseGetItemByCity();
   const {userData}=useSelector(state=>state.user)
       const { myShopData } = useSelector(state => state.owner)
   
