@@ -13,6 +13,8 @@ import AddItem from './pages/AddItem.jsx';
 import EditItem from './pages/EditItem.jsx';
 import UseGetShopByCity from './hooks/UseGetShopByCity.jsx';
 import UseGetItemByCity from './hooks/UseGetItemByCity.jsx';
+import CartPage from './pages/CartPage.jsx';
+import CheckOutPage from './pages/CheckOutPage.jsx';
  export const serverUrl='http://localhost:8080';
 const App = () => {
   useGetCurrentUser();
@@ -32,6 +34,8 @@ const App = () => {
     <Route path="/create-edit-shop" element={userData?<CreateEditShop/>:<Navigate to="/signIn"/>}></Route>
     <Route path="/add-food" element={myShopData?<AddItem/>:<Navigate to="/signIn"/>}></Route>
     <Route path="/edit-item/:itemId" element={myShopData?<EditItem/>:<Navigate to="/signIn"/>}></Route>
+    <Route path="/cart" element={userData?<CartPage/>:<Navigate to="/signIn"/>}></Route>
+    <Route path="/checkout" element={userData?<CheckOutPage/>:<Navigate to="/signIn"/>}></Route>
    </Routes>
   )
 }

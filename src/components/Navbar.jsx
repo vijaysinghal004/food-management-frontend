@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom"
 
 
 function Navbar() {
-    const { userData, city } = useSelector(state => state.user);
+    const { userData, city,cardItems } = useSelector(state => state.user);
     const { myShopData } = useSelector(state => state.owner);
     const [showInfo, setShowInfo] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
@@ -116,9 +116,9 @@ function Navbar() {
 
                 </> : (
                     <>
-                        <div className=" relative cursor-pointer">
+                        <div className=" relative cursor-pointer" onClick={()=>navigate('/cart')}>
                             <FiShoppingCart size={25} className="text-[#ff4d2d]" />
-                            <span className="absolute right-[-9px] top-[-12px] text-[#ff4d2d] ">0</span>
+                            <span className="absolute right-[-9px] top-[-12px] text-[#ff4d2d] ">{cardItems.length}</span>
                         </div>
                         {/* {userData.role=="user" &&   */}
 
