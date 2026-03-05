@@ -102,14 +102,13 @@ function Navbar() {
                                 <FaPlus size={20} />
                             </button>
                         </>}
-                    {/* {userData.role=='user' &&   */}
-                    <div className="  relative text-[#ff4d2d] hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10" >
+                    <div className="  relative text-[#ff4d2d] hidden md:flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10" onClick={() => navigate("/my-orders")}>
                         <LuReceiptIndianRupee size={20} />
 
                         <span>My order</span>
                         <span className="absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]">1</span>
                     </div>
-                    <div className="relative text-[#ff4d2d] md:hidden flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10" >
+                    <div className="relative text-[#ff4d2d] md:hidden flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10" onClick={()=>navigate("/my-orders")}>
                         <LuReceiptIndianRupee size={20} />
                         <span className="absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]">1</span>
                     </div>
@@ -122,7 +121,7 @@ function Navbar() {
                         </div>
                         {/* {userData.role=="user" &&   */}
 
-                        <button className="hidden md:block ps-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium">
+                        <button className="hidden md:block ps-3 py-1 rounded-lg bg-[#ff4d2d]/10 text-[#ff4d2d] text-sm font-medium" onClick={()=>navigate("/my-orders")}>
                             My Orders
                         </button>
                         {/* } */}
@@ -143,7 +142,7 @@ function Navbar() {
                         <div className="text-[17px] font-semibold">{userData.fullName}</div>
                     {userData.role=='user' &&  <>
                     
-                        <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer">My Orders</div>
+                        <div className="md:hidden text-[#ff4d2d] font-semibold cursor-pointer" onClick={()=>navigate("/my-orders")}>My Orders</div>
                     
                     </>}
                         

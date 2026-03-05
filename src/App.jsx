@@ -15,6 +15,9 @@ import UseGetShopByCity from './hooks/UseGetShopByCity.jsx';
 import UseGetItemByCity from './hooks/UseGetItemByCity.jsx';
 import CartPage from './pages/CartPage.jsx';
 import CheckOutPage from './pages/CheckOutPage.jsx';
+import OrderPlacedPage from './pages/OrderPlacedPage.jsx';
+import MyOrders from './pages/MyOrders.jsx';
+import UseGetMyOrders from './hooks/UseGetMyOrders.jsx';
  export const serverUrl='http://localhost:8080';
 const App = () => {
   useGetCurrentUser();
@@ -22,6 +25,7 @@ const App = () => {
   useGetMyShop();
   UseGetShopByCity();
   UseGetItemByCity();
+  UseGetMyOrders();
   const {userData}=useSelector(state=>state.user)
       const { myShopData } = useSelector(state => state.owner)
   
@@ -36,6 +40,8 @@ const App = () => {
     <Route path="/edit-item/:itemId" element={myShopData?<EditItem/>:<Navigate to="/signIn"/>}></Route>
     <Route path="/cart" element={userData?<CartPage/>:<Navigate to="/signIn"/>}></Route>
     <Route path="/checkout" element={userData?<CheckOutPage/>:<Navigate to="/signIn"/>}></Route>
+    <Route path="/order-placed" element={userData?<OrderPlacedPage/>:<Navigate to="/signIn"/>}></Route>
+    <Route path="/my-orders" element={userData?<MyOrders/>:<Navigate to="/signIn"/>}></Route>
    </Routes>
   )
 }

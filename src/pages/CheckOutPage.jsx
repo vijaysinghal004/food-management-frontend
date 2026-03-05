@@ -16,6 +16,7 @@ import { FaMobileAlt } from "react-icons/fa";
 import { FaCreditCard } from "react-icons/fa";
 import { serverUrl } from '../App';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { addMyOrder } from '../redux/userSlice';
 
 
 
@@ -104,6 +105,8 @@ const CheckOutPage = () => {
 
             }, { withCredentials: true })
             console.log(result.data);
+            dispatch(addMyOrder(result.data.newOrder))
+            navigate("/order-placed");
         } catch (err) {
             console.log(err);
         }finally{
