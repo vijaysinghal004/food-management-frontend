@@ -18,6 +18,7 @@ import CheckOutPage from './pages/CheckOutPage.jsx';
 import OrderPlacedPage from './pages/OrderPlacedPage.jsx';
 import MyOrders from './pages/MyOrders.jsx';
 import UseGetMyOrders from './hooks/UseGetMyOrders.jsx';
+import UseUpdateUserLocation from './hooks/UseUpdateUserLocation.jsx';
  export const serverUrl='http://localhost:8080';
 const App = () => {
   useGetCurrentUser();
@@ -26,6 +27,7 @@ const App = () => {
   UseGetShopByCity();
   UseGetItemByCity();
   UseGetMyOrders();
+  UseUpdateUserLocation();
   const {userData}=useSelector(state=>state.user)
       const { myShopData } = useSelector(state => state.owner)
   

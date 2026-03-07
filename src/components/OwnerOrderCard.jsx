@@ -4,9 +4,11 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { serverUrl } from '../App';
 import { useDispatch } from 'react-redux';
 import { UpdateOrderStatus } from '../redux/userSlice';
+import { useState } from 'react';
 
 const OwnerOrderCard = ({ data }) => {
-  const dispatch=useDispatch();
+  const [availableBoys, setAvailableBoys] = useState([]);
+  const dispatch = useDispatch();
   console.log(data);
   const formateDate = (dateString) => {
     const date = new Date(dateString);
@@ -21,16 +23,20 @@ const OwnerOrderCard = ({ data }) => {
     })
   }
   // console.log(data);
-  const handleUpdateStatus=async (orderId,shopId,status)=>{
-    try{
-   const result=await axios.post(`${serverUrl}/api/order/update-status/${orderId}/${shopId}`,{status},{withCredentials:true});
-   console.log(result.data);
-   dispatch(UpdateOrderStatus({
-    orderId,
-    shopId,
-    status:result?.data?.shopOrderStatus}))
-    }catch(err){
-  console.log(err.response);
+  const handleUpdateStatus = async (orderId, shopId, status) => {
+    try {
+      const result = await axios.post(`${serverUrl}/api/order/update-status/${orderId}/${shopId}`, { status }, { withCredentials: true });
+      console.log(result.data);
+      dispatch(UpdateOrderStatus({
+        orderId,
+        shopId,
+        status
+      }))
+      setAvailableBoys(result.data.availableBoys)
+      console.log("hello");
+      console.log(result?.data);
+    } catch (err) {
+      console.log(err.response);
     }
   }
   return (
@@ -63,14 +69,39 @@ const OwnerOrderCard = ({ data }) => {
 
       <div className='flex justify-between items-center mt-auto pt-3 border-t border-gray-200'>
         <span className='text-sm'> status:  <span className='font-semibold capitalize text-[#ff4d2d]'> {data.shopOrders[0].status}</span></span>
-        <select name={data.shopOrders[0].status} className='rounded-md border px-3 py-1 text-sm 1 border-[#ff4d2d] text-[#ff4d2d]'
-         onChange={(e)=>handleUpdateStatus(data._id,data.shopOrders[0].shop._id,e.target.value)}>
+        <select
+          value={data.shopOrders[0].status}
+          className='rounded-md border px-3 py-1 text-sm 1 border-[#ff4d2d] text-[#ff4d2d]'
+          onChange={(e) => handleUpdateStatus(data._id, data.shopOrders[0].shop._id, e.target.value)}>
           <option value="">Select</option>
           <option value="pending">Pending</option>
           <option value="preparing">Preparing</option>
           <option value="out of delivery">Out Of delivery</option>
         </select>
       </div>
+      {data.shopOrders[0].status === "out of delivery" &&
+        <div className='mt-3 p-2 border rounded-lg text-sm bg-orange-50'>
+          {  data.shopOrders[0].assignedDeliveryBoy ?
+           <p>Assigned Delivery Boys:</p>:
+            <p>Available Delivery Boys:</p>
+        }
+          
+         
+          {availableBoys && availableBoys.length > 0 ? (
+            availableBoys.map((b, index) => (
+              <div className='text-gray-300'>
+                {b.fullName}-{b.mobileno}
+              </div>
+            ))
+          ) :
+            data.shopOrders[0].assignedDeliveryBoy ?
+              <div>
+                {data?.shopOrders[0]?.assignedDeliveryBoy?.fullName}-{data?.shopOrders[0]?.assignedDeliveryBoy?.mobileno}
+                </div> :
+              (
+                <div>Waiting for delivery boy to accept</div>
+              )}
+        </div>}
       <div className='text-right font-bold text-gray-800 text-sm'>
         Total: ₹{data.shopOrders[0].subtotal}
       </div>

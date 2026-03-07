@@ -77,10 +77,10 @@ const CheckOutPage = () => {
             const result = await axios.get(`https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(searchLocation)}&format=json&apiKey=${import.meta.env.VITE_GEOAPIFY}`)
             console.log(result.data.results[0].lat);
             console.log(result.data.results[0].lon);
-            const location = result.data.results[0]
-
+            const location = result.data.results[0];
+// setAddress(searchLocation)
             dispatch(setLocation({ lat: location.lat, lon: location.lon }));
-            // dispatch(setAddress(searchLocation));
+            dispatch(setAddress(searchLocation));
         } catch (err) {
             console.log(err.message);
         }
