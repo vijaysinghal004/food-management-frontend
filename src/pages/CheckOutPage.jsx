@@ -79,6 +79,7 @@ const CheckOutPage = () => {
             console.log(result.data.results[0].lon);
             const location = result.data.results[0];
             // setAddress(searchLocation)
+            //solved
             dispatch(setLocation({ lat: location.lat, lon: location.lon }));
             dispatch(setAddress(searchLocation));
         } catch (err) {
