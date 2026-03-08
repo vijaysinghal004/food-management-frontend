@@ -11,7 +11,8 @@ const DeliveryBoy = () => {
   const { userData } = useSelector(state => state.user)
   const [availableAssignment, setAvailableAssignment] = useState(null);
   const [currentOrder, setCurrentOrder] = useState();
-const [showOtpBox,setShowOtpBox]=useState(false)
+const [showOtpBox,setShowOtpBox]=useState(false);
+const [otp,setOtp]=useState("")
 
   const getAssignments = async () => {
     try {
@@ -34,15 +35,34 @@ const [showOtpBox,setShowOtpBox]=useState(false)
     }
   }
 
-  const handleSendOtp=(e)=>{
-   setShowOtpBox(true);
-  }
+
 
   const getCurrentOrder = async () => {
     try {
       const res = await axios.get(`${serverUrl}/api/order/get-current-order`, { withCredentials: true })
       console.log(res.data);
       setCurrentOrder(res.data);
+    } catch (err) {
+      console.log(err.response);
+    }
+  }
+
+ const handleSendOtp = async () => {
+
+    try {
+      const res = await axios.post(`${serverUrl}/api/order/send-delivery-otp`, {orderId:currentOrder._id,shopOrderId:currentOrder?.shopOrder._id}, { withCredentials: true })
+      console.log(res.data);
+   setShowOtpBox(true);
+
+    } catch (err) {
+      console.log(err.response);
+    }
+  }
+   const verifyOtp = async () => {
+    try {
+      const res = await axios.post(`${serverUrl}/api/order/verify-delivery-otp`, {orderId:currentOrder._id,shopOrderId:currentOrder.shopOrder._id,otp}, { withCredentials: true })
+      console.log(res.data);
+      // setCurrentOrder(res.data);
     } catch (err) {
       console.log(err.response);
     }
@@ -105,9 +125,11 @@ const [showOtpBox,setShowOtpBox]=useState(false)
             <div className='mt-4 p-4 border rounded-xl bg-gray-100'>
               <p className='text-sm font-semibold mb-2'> Enter Otp send to <span className='text-orange-500'>{currentOrder.user.fullName}</span></p>
            <input type="text"
+           onChange={(e)=>setOtp(e.target.value)}
+           value={otp}
             className='w-full border px-3 py-2 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-orange-400' 
             placeholder='enter otp'/>
-           <button className=' w-full bg-orange-500 text-white font-semibold rounded-xl shadow-md hover:bg-orange-600 active:scale-95 transition-all px-4 py-2'>Submit Otp</button>
+           <button className=' w-full bg-orange-500 text-white font-semibold rounded-xl shadow-md hover:bg-orange-600 active:scale-95 transition-all px-4 py-2' onClick={verifyOtp}>Submit Otp</button>
             </div>
             }
           </div>

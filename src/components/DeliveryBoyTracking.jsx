@@ -3,7 +3,7 @@ import scooter from "../assets/scooter.png"
 import home from "../assets/home.png"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import { MapContainer, Marker, Polyline, Popup, TileLayer } from 'react-leaflet'
 
 
 const deliveryBoyIcon = new L.Icon({
@@ -52,7 +52,7 @@ const DeliveryBoyTracking = ({ data }) => {
                         Customer
                     </Popup>
                 </Marker>
-                <polyline position={path} color="blue" weight={4}/>
+                <Polyline positions={path} color="blue" weight={4}/>
             </MapContainer>
             
         </div>

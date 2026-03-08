@@ -1,6 +1,8 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
 const UserOrderCad = ({ data }) => {
+  const navigate=useNavigate();
   // console.log(data.createdAt);
   const formateDate = (dateString) => {
     const date = new Date(dateString);
@@ -48,7 +50,9 @@ const UserOrderCad = ({ data }) => {
       ))}
       <div className='flex justify-between items-center border-t pt-2'>
         <p className='font-semibold'>Total: ₹{data.totalAmount}</p>
-        <button className='bg-[#ff4d2d] hover:bg-[#e64526] text-white px-4 py-2 rounded-lg text-sm'>Track Your Order</button>
+        <button className='bg-[#ff4d2d] hover:bg-[#e64526] text-white px-4 py-2 rounded-lg text-sm'
+        onClick={()=>navigate(`/track-order/${data._id}`)}
+        >Track Your Order</button>
       </div>
     </div>
   )
