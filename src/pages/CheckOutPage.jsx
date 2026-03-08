@@ -46,7 +46,7 @@ const CheckOutPage = () => {
         getAddressByLatLng(loc.lat, loc.lng);
     }
 
-    const [loading,setLoading]=useState(false)
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
         setSearchLocation(address);
     }, [address])
@@ -78,7 +78,7 @@ const CheckOutPage = () => {
             console.log(result.data.results[0].lat);
             console.log(result.data.results[0].lon);
             const location = result.data.results[0];
-// setAddress(searchLocation)
+            // setAddress(searchLocation)
             dispatch(setLocation({ lat: location.lat, lon: location.lon }));
             dispatch(setAddress(searchLocation));
         } catch (err) {
@@ -105,13 +105,55 @@ const CheckOutPage = () => {
 
             }, { withCredentials: true })
             console.log(result.data);
-            dispatch(addMyOrder(result.data.newOrder))
-            navigate("/order-placed");
+            if (paymentMethod == "cod") {
+                dispatch(addMyOrder(result.data.newOrder))
+                navigate("/order-placed");
+            } else {
+                const orderId = result.data.orderId
+                const razorOrder = result.data.razorOrder
+                openRazorPayWindow(orderId, razorOrder)
+            }
+
         } catch (err) {
-            console.log(err);
-        }finally{
+            console.log(err.response.data.message);
+        } finally {
             setLoading(false)
         }
+    }
+
+    const openRazorPayWindow = async (orderId, razorOrder) => {
+        const options = {
+            key: import.meta.env.VITE_RAZORPAY_ID_KEY, // Replace with your Razorpay key_id
+            amount: razorOrder.amount, // Amount is in currency subunits.
+            currency: 'INR',
+            name: 'vingo',
+            description: 'food delivery website',
+            order_id: razorOrder.id, // This is the order_id created in the backend
+            handler: async (response) => {
+                try {
+                    const result = await axios.post(`${serverUrl}/api/order/verify-payment`, {
+                        razorpay_payment_id: response.razorpay_payment_id,
+                        orderId
+                    }, { withCredentials: true })
+                    dispatch(addMyOrder(result.data.order))
+                    navigate("/order-placed");
+                } catch (err) {
+                    console.log(err.response)
+                }
+            },
+            // callback_url: 'http://localhost:8080/payment/verifyPayment', // Your success URL
+            prefill: {
+                name: 'Vijay',
+                email: 'vijay@example.com',
+                contact: '9999999999'
+            },
+            theme: {
+                color: '#F37254'
+            },
+
+        };
+        const rzp = new window.Razorpay(options);
+        rzp.open();
     }
 
     return (
@@ -225,8 +267,8 @@ const CheckOutPage = () => {
                 <button
                     onClick={handlePlaceOrder}
                     className='w-full bg-[#ff4d2d] hover:bg-[#e64526] text-white py-3 rounded-xl font-semibold flex justify-center items-center gap-2'>
-                       { loading && <AiOutlineLoading3Quarters size={20} className='animate-spin' />}
-                       {loading ? "Placing...": paymentMethod === "cod" ? "Place Order" : "Pay & Place Order"}
+                    {loading && <AiOutlineLoading3Quarters size={20} className='animate-spin' />}
+                    {loading ? "Placing..." : paymentMethod === "cod" ? "Place Order" : "Pay & Place Order"}
                 </button>
             </div>
         </div>
