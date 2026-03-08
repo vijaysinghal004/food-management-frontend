@@ -10,8 +10,9 @@ const userSlice = createSlice({
         shopInMyCity: [],
         itemInMyCity: [],
         cardItems: [],
-        totalAmount:0,
-        myOrders: []
+        totalAmount: 0,
+        myOrders: [],
+        searchItems: null,
     },
     reducers: {
         setUserData: (state, action) => {
@@ -42,42 +43,45 @@ const userSlice = createSlice({
                 state.cardItems.push(cardItem);
             }
             // console.log(state.cardItems);
-            state.totalAmount=state.cardItems.reduce((sum,i)=>sum+=i.price*i.quantity,0)
+            state.totalAmount = state.cardItems.reduce((sum, i) => sum += i.price * i.quantity, 0)
         },
-        updateQuantity:(state,action)=>{
-            const {id,quantity}=action.payload
-            const item=state.cardItems.find(i=>i.id==id)
-            if(item){
-                item.quantity=quantity
+        updateQuantity: (state, action) => {
+            const { id, quantity } = action.payload
+            const item = state.cardItems.find(i => i.id == id)
+            if (item) {
+                item.quantity = quantity
             }
-                        state.totalAmount=state.cardItems.reduce((sum,i)=>sum+=i.price*i.quantity,0)
+            state.totalAmount = state.cardItems.reduce((sum, i) => sum += i.price * i.quantity, 0)
 
         },
-         removeCartItem:(state,action)=>{
-            const id=action.payload
-            state.cardItems=state.cardItems.filter(i=>i.id!==id)
-                        state.totalAmount=state.cardItems.reduce((sum,i)=>sum+=i.price*i.quantity,0)
+        removeCartItem: (state, action) => {
+            const id = action.payload
+            state.cardItems = state.cardItems.filter(i => i.id !== id)
+            state.totalAmount = state.cardItems.reduce((sum, i) => sum += i.price * i.quantity, 0)
 
         },
-        setMyOrders:(state,action)=>{
-            state.myOrders=action.payload
+        setMyOrders: (state, action) => {
+            state.myOrders = action.payload
         },
-        addMyOrder:(state,action)=>{
-            state.myOrders=[action.payload,...state.myOrders]
+        addMyOrder: (state, action) => {
+            state.myOrders = [action.payload, ...state.myOrders]
         },
-        UpdateOrderStatus:(state,action)=>{
-            const {orderId,shopId,status}=action.payload
-            const order=state.myOrders.find(o=>o._id==orderId);
-            if(order){
-                if(order.shopOrders && order.shopOrders[0].shop._id==shopId){
-                    order.shopOrders[0].status=status
+        UpdateOrderStatus: (state, action) => {
+            const { orderId, shopId, status } = action.payload
+            const order = state.myOrders.find(o => o._id == orderId);
+            if (order) {
+                if (order.shopOrders && order.shopOrders[0].shop._id == shopId) {
+                    order.shopOrders[0].status = status
                 }
             }
-        }
+        },
+        setSearchItems: (state, action) => {
+            state.searchItems = action.payload
+        },
 
 
     }
 })
 
-export const { setUserData, setCity, setState, setCurrAddress, setShopInMyCity, setItemInMyCity, addToCart,updateQuantity,removeCartItem ,setMyOrders,addMyOrder,UpdateOrderStatus} = userSlice.actions
+export const { setUserData, setCity, setState, setCurrAddress, setShopInMyCity, setItemInMyCity, addToCart, updateQuantity, removeCartItem, setMyOrders, addMyOrder, UpdateOrderStatus, setSearchItems } = userSlice.actions
 export default userSlice.reducer

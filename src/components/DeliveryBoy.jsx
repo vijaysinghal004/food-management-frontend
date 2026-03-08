@@ -6,13 +6,20 @@ import { useEffect } from 'react'
 import { serverUrl } from '../App'
 import { useState } from 'react'
 import DeliveryBoyTracking from './DeliveryBoyTracking'
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { useNavigate } from 'react-router-dom'
+
 
 const DeliveryBoy = () => {
   const { userData } = useSelector(state => state.user)
   const [availableAssignment, setAvailableAssignment] = useState(null);
   const [currentOrder, setCurrentOrder] = useState();
-const [showOtpBox,setShowOtpBox]=useState(false);
-const [otp,setOtp]=useState("")
+  const [showOtpBox, setShowOtpBox] = useState(false);
+  const [otp, setOtp] = useState("")
+  const [loading1, setLoading1] = useState(false)
+  const [loading2, setLoading2] = useState(false)
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
 
   const getAssignments = async () => {
     try {
@@ -20,7 +27,6 @@ const [otp,setOtp]=useState("")
       setAvailableAssignment(res.data.formated);
       console.log(res.data.formated)
     } catch (err) {
-      console.log(err);
       console.log(err.response);
     }
   }
@@ -29,8 +35,11 @@ const [otp,setOtp]=useState("")
     try {
       const res = await axios.get(`${serverUrl}/api/order/accept-order/${assignmentId}`, { withCredentials: true })
       console.log(res.data);
+      setError("")
+
       await getCurrentOrder();
     } catch (err) {
+      setError(err?.response?.data?.message);
       console.log(err.response);
     }
   }
@@ -41,30 +50,42 @@ const [otp,setOtp]=useState("")
     try {
       const res = await axios.get(`${serverUrl}/api/order/get-current-order`, { withCredentials: true })
       console.log(res.data);
+
       setCurrentOrder(res.data);
     } catch (err) {
       console.log(err.response);
     }
   }
 
- const handleSendOtp = async () => {
-
+  const handleSendOtp = async () => {
+    setLoading1(true);
     try {
-      const res = await axios.post(`${serverUrl}/api/order/send-delivery-otp`, {orderId:currentOrder._id,shopOrderId:currentOrder?.shopOrder._id}, { withCredentials: true })
+      const res = await axios.post(`${serverUrl}/api/order/send-delivery-otp`, { orderId: currentOrder._id, shopOrderId: currentOrder?.shopOrder._id }, { withCredentials: true })
       console.log(res.data);
-   setShowOtpBox(true);
+      setError("")
+
+      setShowOtpBox(true);
 
     } catch (err) {
+      setError(err?.response?.data?.message);
       console.log(err.response);
+    } finally {
+      setLoading1(false);
     }
   }
-   const verifyOtp = async () => {
+  const verifyOtp = async () => {
+    setLoading2(true);
     try {
-      const res = await axios.post(`${serverUrl}/api/order/verify-delivery-otp`, {orderId:currentOrder._id,shopOrderId:currentOrder.shopOrder._id,otp}, { withCredentials: true })
+      const res = await axios.post(`${serverUrl}/api/order/verify-delivery-otp`, { orderId: currentOrder._id, shopOrderId: currentOrder.shopOrder._id, otp }, { withCredentials: true })
       console.log(res.data);
+      setError("")
       // setCurrentOrder(res.data);
+      navigate("/my-orders")
     } catch (err) {
+      setError(err?.response?.data?.message);
       console.log(err.response);
+    } finally {
+      setLoading2(false)
     }
   }
 
@@ -117,23 +138,40 @@ const [otp,setOtp]=useState("")
               <p className='text-xs text-gray-500'>{currentOrder?.deliveryAddress.text}</p>
               <p className='text-xs text-gray-400'>{currentOrder?.shopOrder?.shopOrderItems.length} items | ₹{currentOrder?.shopOrder.subtotal}</p>
             </div>
-            <DeliveryBoyTracking data={currentOrder}/>
+            <DeliveryBoyTracking data={currentOrder} />
             {!showOtpBox ?
-            <button 
-            onClick={handleSendOtp}
-            className='mt-4 w-full bg-green-500 text-white font-semibold rounded-xl shadow-md hover:bg-green-600 active:scale-95 transition-all px-4 py-2'>Mark as Delivered</button>:
-            <div className='mt-4 p-4 border rounded-xl bg-gray-100'>
-              <p className='text-sm font-semibold mb-2'> Enter Otp send to <span className='text-orange-500'>{currentOrder.user.fullName}</span></p>
-           <input type="text"
-           onChange={(e)=>setOtp(e.target.value)}
-           value={otp}
-            className='w-full border px-3 py-2 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-orange-400' 
-            placeholder='enter otp'/>
-           <button className=' w-full bg-orange-500 text-white font-semibold rounded-xl shadow-md hover:bg-orange-600 active:scale-95 transition-all px-4 py-2' onClick={verifyOtp}>Submit Otp</button>
-            </div>
+              <button
+                onClick={handleSendOtp}
+                className='mt-4 w-full bg-green-500 text-white font-semibold rounded-xl flex justify-center items-center gap-2 shadow-md hover:bg-green-600 active:scale-95 transition-all px-4 py-2 disabled:opacity-70'
+                disabled={loading1}
+              >
+                {loading1 && <AiOutlineLoading3Quarters size={20} className='  animate-spin  ' />}
+                {!loading1 ? " Mark as Delivered" : `Sending Otp to ${currentOrder.user.fullName}... `}
+
+              </button> :
+              <div className='mt-4 p-4 border rounded-xl bg-gray-100'>
+                <p className='text-sm font-semibold mb-2'> Enter Otp send to <span className='text-orange-500'>{currentOrder.user.fullName}</span></p>
+                <input type="text"
+                  onChange={(e) => setOtp(e.target.value)}
+                  value={otp}
+                  className='w-full border px-3 py-2 rounded-lg mb-3 focus:outline-none focus:ring-2 focus:ring-orange-400'
+                  placeholder='enter otp' />
+                <button className=' w-full bg-orange-500 text-white font-semibold rounded-xl shadow-md hover:bg-orange-600 active:scale-95 transition-all px-4 py-2  flex items-center justify-center gap-2 disabled:opacity-70'
+                  disabled={loading2}
+
+                  onClick={verifyOtp}>
+                  {loading2 && <AiOutlineLoading3Quarters size={20} className='  animate-spin' />}
+                  {!loading2 ? "Submit Otp" : "Verifying.. "}</button>
+              </div>
             }
+                  {error && (
+  <div className="w-full bg-red-100 mt-3 border  text-center border-red-300 text-red-600 px-4 py-2 rounded-lg text-sm">
+    {error}
+  </div>
+)}
           </div>
         }
+  
 
       </div>
     </div>
