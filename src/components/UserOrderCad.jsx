@@ -24,8 +24,15 @@ const UserOrderCad = ({ data }) => {
           <p className='font-semibold'>order #{data._id.slice(-6)}</p>
           <p className='text-sm text-gray-500'>Date: {formateDate(data.createdAt)}</p>
         </div>
+              {/* {data.paymentMethod=="online"? <p className='text-gray-600 gap-2 text-sm'>payment:{data.payment?"true":"false"}</p>:
+          <p className='text-gray-600 gap-2 text-sm'>Payment Method : {data.paymentMethod}</p> */}
+  {/* } */}
         <div className='text-right'>
-          <p className='text-sm text-gray-500 cursor-pointer'>{data.paymentMethod.toUpperCase()}</p>
+          {data.paymentMethod=='cod'?
+          <p className='text-sm text-gray-500 cursor-pointer font-semibold'>{data.paymentMethod.toUpperCase()}</p>:
+          <p className='text-gray-600 gap-2 text-sm '>
+            <span className='font-semibold'>payment:</span> {data.payment?"true":"false"}  </p>
+        }
           <p className='text-sm text-blue-400 font-medium'>{data.status}</p>
         </div>
       </div>

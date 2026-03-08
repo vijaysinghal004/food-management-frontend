@@ -49,8 +49,12 @@ const OwnerOrderCard = ({ data }) => {
         <h2 className='text-lg font-semibold text-gray-800'>{data.user.fullName}</h2>
         <p className='text-sm text-gray-600'>{data.user.email}</p>
         <p className='text-sm text-gray-600 flex items-center gap-2 mt-1'><FaPhoneAlt /> <span>{data.user.mobileno}
+   
         </span>
         </p>
+               {data.paymentMethod=="online"? <p className='text-gray-600 gap-2 text-sm'>payment:{data.payment?"true":"false"}</p>:
+          <p className='text-gray-600 gap-2 text-sm'>Payment Method : {data.paymentMethod}</p>
+  }
       </div>
       <div className='flex items-start gap-2 text-gray-600 text-sm flex-col'>
         <p>{data.deliveryAddress.text}</p>
