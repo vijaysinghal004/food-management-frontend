@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom'
 
 
 const DeliveryBoy = () => {
-  const { userData } = useSelector(state => state.user)
+  const { userData, socket } = useSelector(state => state.user)
   const [availableAssignment, setAvailableAssignment] = useState(null);
   const [currentOrder, setCurrentOrder] = useState();
   const [showOtpBox, setShowOtpBox] = useState(false);
@@ -88,6 +88,16 @@ const DeliveryBoy = () => {
       setLoading2(false)
     }
   }
+  // useEffect(() => {
+  //   socket?.on("newAssignment", (data) => {
+  //     if (data.sendTo === userData._id) {
+  //       setAvailableAssignment(prev=>[data, ...prev||[]])
+  //     }
+  //   })
+  //   return ()=>{
+  //     socket?.off('newAssignment')
+  //   }
+  // },[socket, userData])
 
   useEffect(() => {
     getAssignments();
@@ -164,14 +174,14 @@ const DeliveryBoy = () => {
                   {!loading2 ? "Submit Otp" : "Verifying.. "}</button>
               </div>
             }
-                  {error && (
-  <div className="w-full bg-red-100 mt-3 border  text-center border-red-300 text-red-600 px-4 py-2 rounded-lg text-sm">
-    {error}
-  </div>
-)}
+            {error && (
+              <div className="w-full bg-red-100 mt-3 border  text-center border-red-300 text-red-600 px-4 py-2 rounded-lg text-sm">
+                {error}
+              </div>
+            )}
           </div>
         }
-  
+
 
       </div>
     </div>

@@ -1,13 +1,50 @@
 import React from 'react'
 import { IoIosArrowRoundBack } from 'react-icons/io';
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import UserOrderCad from '../components/UserOrderCad';
 import OwnerOrderCard from '../components/OwnerOrderCard';
+import { useEffect } from 'react';
+import { addMyOrder, setMyOrders, updateRealTimeOrderStatus } from '../redux/userSlice';
+import { TbShoppingBagDiscount } from 'react-icons/tb';
+
 
 const MyOrders = () => {
-  const { userData, myOrders } = useSelector(state => state.user);
+  const { userData, myOrders,socket } = useSelector(state => state.user);
   const navigate = useNavigate();
+  const dispatch=useDispatch();
+
+  useEffect(()=>{
+socket?.on('newOrder',(data)=>{
+  console.log("someone add order")
+  if(data?.shopOrders[0]?.owner?._id==userData._id){
+    console.log(data)
+dispatch(setMyOrders([data,...myOrders]))  
+}
+})
+socket?.on("update-status",({orderId,shopId,status,userId})=>{
+  if(userId==userData._id){
+    dispatch(updateRealTimeOrderStatus({orderId,shopId,status}))
+  }
+})  
+return ()=>{
+  socket?.off('newOrder')
+  socket?.off('update-status')
+}
+  },[socket,userData])
+// useEffect(()=>{
+//   socket?.on('newOrder',(data)=>{
+//     console.log("New order received",data)
+
+//     if(data?.shopOrders?.owner?._id === userData._id){
+//        dispatch(addMyOrder(data))
+//     }
+//   })
+
+//   return ()=>{
+//     socket?.off('newOrder')
+//   }
+// },[socket,userData])
 
   return (
     <div className='w-full min-h-screen bg-[#fff9f6] flex justify-center  px-

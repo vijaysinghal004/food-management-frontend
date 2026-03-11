@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Navigate, Route, Routes } from 'react-router-dom'
 import SignUp from './pages/SignUp'
 import Signin from './pages/Signin'
 import ForgetPassword from './pages/ForgetPassword';
 import useGetCurrentUser from './hooks/UseGetCurrentUser.jsx';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Home from './pages/Home.jsx';
 import UseGetCity from './hooks/UseGetCity.jsx';
 import useGetMyShop from './hooks/UseGetMyShop.jsx';
@@ -21,6 +21,9 @@ import UseGetMyOrders from './hooks/UseGetMyOrders.jsx';
 import UseUpdateUserLocation from './hooks/UseUpdateUserLocation.jsx';
 import TrackOrderPage from './pages/TrackOrderPage.jsx';
 import Shop from './pages/Shop.jsx';
+import { linkWithCredential } from 'firebase/auth';
+import { io } from 'socket.io-client';
+import { setSocket } from './redux/userSlice.jsx';
  export const serverUrl='http://localhost:8080';
 const App = () => {
   useGetCurrentUser();
@@ -30,6 +33,23 @@ const App = () => {
   UseGetItemByCity();
   UseGetMyOrders();
   UseUpdateUserLocation();
+  const dispatch=useDispatch();
+
+useEffect(()=>{ 
+ const socketInstance=io(serverUrl,{withCredentials:true})
+ dispatch(setSocket(socketInstance))
+ socketInstance.on('connect',()=>{
+  console.log("connection successfully ");
+  if(userData){
+    socketInstance.emit('identity',{userId:userData._id})
+  }
+ })
+ return ()=>{
+  socketInstance.disconnect()
+ }
+},[])
+// },[userData?._id])
+
   const {userData}=useSelector(state=>state.user)
       const { myShopData } = useSelector(state => state.owner)
   
