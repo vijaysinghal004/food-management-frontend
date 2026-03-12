@@ -84,8 +84,7 @@ const userSlice = createSlice({
                 if(shopOrder){
                     shopOrder.status=status
                 }    
-            }
-            
+            }  
         },
         setSearchItems: (state, action) => {
             state.searchItems = action.payload

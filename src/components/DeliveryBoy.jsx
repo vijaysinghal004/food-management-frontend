@@ -88,16 +88,16 @@ const DeliveryBoy = () => {
       setLoading2(false)
     }
   }
-  // useEffect(() => {
-  //   socket?.on("newAssignment", (data) => {
-  //     if (data.sendTo === userData._id) {
-  //       setAvailableAssignment(prev=>[data, ...prev||[]])
-  //     }
-  //   })
-  //   return ()=>{
-  //     socket?.off('newAssignment')
-  //   }
-  // },[socket, userData])
+  useEffect(() => {
+    socket?.on("newAssignment", (data) => {
+      if (String(data.sendTo) === String(userData._id)) {
+        setAvailableAssignment(prev=>[data.d, ...(prev||[])])
+      } 
+    })
+    return ()=>{
+      socket?.off('newAssignment')
+    }
+  },[socket, userData])
 
   useEffect(() => {
     getAssignments();

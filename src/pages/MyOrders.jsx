@@ -10,41 +10,75 @@ import { TbShoppingBagDiscount } from 'react-icons/tb';
 
 
 const MyOrders = () => {
-  const { userData, myOrders,socket } = useSelector(state => state.user);
+  const { userData, myOrders, socket } = useSelector(state => state.user);
   const navigate = useNavigate();
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
-  useEffect(()=>{
-socket?.on('newOrder',(data)=>{
-  console.log("someone add order")
-  if(data?.shopOrders[0]?.owner?._id==userData._id){
-    console.log(data)
-dispatch(setMyOrders([data,...myOrders]))  
-}
-})
-socket?.on("update-status",({orderId,shopId,status,userId})=>{
-  if(userId==userData._id){
-    dispatch(updateRealTimeOrderStatus({orderId,shopId,status}))
-  }
-})  
-return ()=>{
-  socket?.off('newOrder')
-  socket?.off('update-status')
-}
-  },[socket,userData])
-// useEffect(()=>{
-//   socket?.on('newOrder',(data)=>{
-//     console.log("New order received",data)
+  useEffect(() => {
+    socket?.on('newOrder', (data) => {
+      console.log("someone add order")
+      if (data?.shopOrders[0]?.owner?._id == userData._id) {
+        console.log(data)
+        dispatch(setMyOrders([data, ...myOrders]))
+      }
+    })
+    socket?.on("update-status", ({ orderId, shopId, status, userId }) => {
+      if (userId == userData._id) {
+        dispatch(updateRealTimeOrderStatus({ orderId, shopId, status }))
+      }
+    })
+    return () => {
+      socket?.off('newOrder')
+      socket?.off('update-status')
+    }
+  }, [socket, userData])
+  // useEffect(() => {
+  //   socket?.on('newOrder', (data) => {
+  //     console.log("New order received", data)
 
-//     if(data?.shopOrders?.owner?._id === userData._id){
-//        dispatch(addMyOrder(data))
-//     }
-//   })
+  //     if (data?.shopOrders?.owner?._id === userData._id) {
+  //       dispatch(addMyOrder(data))
+  //     }
+  //   })
 
-//   return ()=>{
-//     socket?.off('newOrder')
-//   }
-// },[socket,userData])
+  //   return () => {
+  //     socket?.off('newOrder')
+  //   }
+  // }, [socket, userData])
+
+
+  // useEffect(() => {
+
+  //   if (!socket) return;
+
+  //   socket.on("newOrder", (data) => {
+  //     console.log("New order received", data)
+
+  //     // owner side
+  //     if (data?.shopOrders?.[0]?.owner?._id === userData?._id) {
+  //       dispatch(addMyOrder(data))
+  //     }
+  //   })
+
+
+    // socket.on("update-status", ({ orderId, shopId, status, userId }) => {
+
+    //   // user side
+    //   if (userId === userData?._id) {
+    //     dispatch(updateRealTimeOrderStatus({ orderId, shopId, status }))
+    //   }
+
+    // })
+
+
+  //   return () => {
+  //     // socket.off("newOrder")
+  //     // socket.off("update-status")
+  //   }
+
+  // }, [socket, userData])
+
+
 
   return (
     <div className='w-full min-h-screen bg-[#fff9f6] flex justify-center  px-
@@ -65,8 +99,8 @@ return ()=>{
           <h1 className="text-2xl font-semibold">My Orders</h1>
         </div>
         <div className='space-y-6'>
-          {myOrders.map((order,index)=>(
-            userData.role=='user'?(<UserOrderCad data={order} key={index}/>):userData.role=='owner'?(<OwnerOrderCard data={order} key={index}/>):null
+          {myOrders.map((order, index) => (
+            userData.role == 'user' ? (<UserOrderCad data={order} key={index} />) : userData.role == 'owner' ? (<OwnerOrderCard data={order} key={index} />) : null
           ))}
         </div>
       </div>
