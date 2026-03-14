@@ -14,7 +14,7 @@ import { serverUrl } from "../App";
 
 
 function Navbar() {
-    const { userData, city, cardItems } = useSelector(state => state.user);
+    const { userData, city, cardItems, } = useSelector(state => state.user);
     const { myShopData } = useSelector(state => state.owner);
     const [showInfo, setShowInfo] = useState(false);
     const [showSearch, setShowSearch] = useState(false);
@@ -134,7 +134,7 @@ return (
                     <LuReceiptIndianRupee size={20} />
 
                     <span>My order</span>
-                    <span className="absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]">1</span>
+                    {/* <span className="absolute -right-2 -top-2 text-xs font-bold text-white bg-[#ff4d2d] rounded-full px-[6px] py-[1px]">1</span> */}
                 </div>
                 <div className="relative text-[#ff4d2d] md:hidden flex items-center gap-1 p-2 cursor-pointer rounded-full bg-[#ff4d2d]/10" onClick={() => navigate("/my-orders")}>
                     <LuReceiptIndianRupee size={20} />
