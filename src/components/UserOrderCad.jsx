@@ -1,8 +1,12 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import { serverUrl } from '../App';
 
 const UserOrderCad = ({ data }) => {
   const navigate=useNavigate();
+
+  // const [selectedRating,setSelectedRating]=useState("")
   // console.log(data.createdAt);
   const formateDate = (dateString) => {
     const date = new Date(dateString);
@@ -17,6 +21,19 @@ const UserOrderCad = ({ data }) => {
     })
   }
   formateDate(data.createdAt);
+  const[selectRating,SetSelectRating]=useState({})//itemId:rating
+  const handleRating=async (itemId,rating)=>{
+  try{
+   const result=await axios.post(`${serverUrl}/api/item/rating`,{itemId,rating},{withCredentials:true})
+   SetSelectRating(prev=>({
+    ...prev,[itemId]:rating
+   }))
+  }catch(err){
+    console.log(err.message)
+  }
+  }
+
+
   return (
     <div className='bg-white rounded-lg shadow p-4 space-y-4'>
       <div className="flex justify-between border-b pb-2">
@@ -46,6 +63,23 @@ const UserOrderCad = ({ data }) => {
                 <img src={item.item.image} alt="" className="w-full h-24 object-cover rounded" />
                 <p className='text-sm font-semibold mt-1'>{item.name}</p>
                 <p className='text-xs text-gray-500'>Qty: {item.quantity} x ₹{item.price}  </p>
+            
+              {shopOrder.status==="delivered" && 
+               <div>
+               {
+                [1,2,3,4,5].map((star)=>(
+                  <button className={`${selectRating[item.item._id]>=star?'text-yellow-400':'text-gray-400'}`}
+                  onClick={()=>handleRating(item.item._id,star)}
+                  >
+                    ★
+                  </button>    
+                ))}
+               </div>
+              
+              }
+
+
+
               </div>
             ))}
           </div>

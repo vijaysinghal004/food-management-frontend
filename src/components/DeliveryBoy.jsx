@@ -20,6 +20,37 @@ const DeliveryBoy = () => {
   const [loading2, setLoading2] = useState(false)
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [deliveryBoyLocation, setDeliveryBoyLocation] = useState(null)
+
+
+  useEffect(() => {
+    if (!socket || userData?.role !== "deliveryBoy") {
+      return;
+    }
+    let watchId;
+    if (navigator.geolocation) {
+      watchId = navigator.geolocation.watchPosition((position) => {
+        const latitude = position.coords.latitude
+        const longitude = position.coords.longitude
+        setDeliveryBoyLocation({ lat: latitude, lon: longitude })
+        socket.emit('updateLocation', {
+          latitude, longitude, userId: userData?._id
+        })
+      },
+        (error) => {
+          console.log(error)
+        },
+        {
+          enableHighAccuracy: true,
+        }
+      )
+    }
+    return () => {
+      if (watchId) {
+        navigator.geolocation.clearWatch(watchId)
+      }
+    }
+  }, [socket, userData])
 
   const getAssignments = async () => {
     try {
@@ -91,13 +122,13 @@ const DeliveryBoy = () => {
   useEffect(() => {
     socket?.on("newAssignment", (data) => {
       if (String(data.sendTo) === String(userData._id)) {
-        setAvailableAssignment(prev=>[data.d, ...(prev||[])])
-      } 
+        setAvailableAssignment(prev => [data.d, ...(prev || [])])
+      }
     })
-    return ()=>{
+    return () => {
       socket?.off('newAssignment')
     }
-  },[socket, userData])
+  }, [socket, userData])
 
   useEffect(() => {
     getAssignments();
@@ -110,7 +141,7 @@ const DeliveryBoy = () => {
       <div className='w-full max-w-[800px] flex flex-col gap-5 items-center'>
         <div className='bg-white rounded-2xl shadow-md p-5 flex  flex-col justify-start items-center w-[90%] border border-orange-100 text-center gap-2'>
           <h1 className='text-xl font-bold text-[#ff4d2d]'>  Welcome, {userData.fullName} </h1>
-          <p className='text-[#ff4d2d]'> <span className='font-semibold'>Latitude: </span>{userData.location.coordinates[1]}, <span className='font-semibold'>Longitude: </span> {userData.location.coordinates[0]}</p>
+          <p className='text-[#ff4d2d]'> <span className='font-semibold'>Latitude: </span>{deliveryBoyLocation?.lat || userData.location.coordinates[1]}, <span className='font-semibold'>Longitude: </span> {deliveryBoyLocation?.lon || userData.location.coordinates[0]}</p>
         </div>
         {!currentOrder &&
           <div className='bg-white rounded-2xl p-5 shadow-md w-[90%] border border-orange-100'>
@@ -148,7 +179,16 @@ const DeliveryBoy = () => {
               <p className='text-xs text-gray-500'>{currentOrder?.deliveryAddress.text}</p>
               <p className='text-xs text-gray-400'>{currentOrder?.shopOrder?.shopOrderItems.length} items | ₹{currentOrder?.shopOrder.subtotal}</p>
             </div>
-            <DeliveryBoyTracking data={currentOrder} />
+            <DeliveryBoyTracking data={{
+              deliveryBoyLocation: deliveryBoyLocation ||{
+                  lat: userData.location.coordinates[1],
+                  lon: userData.location.coordinates[0]
+                },
+              customerLocation: {
+                lat: currentOrder.deliveryAddress.latitude,
+                lon: currentOrder.deliveryAddress.longitude,
+              }
+            }} />
             {!showOtpBox ?
               <button
                 onClick={handleSendOtp}
