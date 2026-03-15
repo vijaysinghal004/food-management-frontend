@@ -35,7 +35,7 @@ const SignUp = () => {
         // setErr("");
         e.preventDefault();
         try {
-            const result = await axios.post(`http://localhost:8080/api/auth/signUp`,
+            const result = await axios.post(`${serverUrl}/api/auth/signUp`,
                 {
                     fullName,
                     email,
@@ -65,7 +65,7 @@ const SignUp = () => {
         const result = await signInWithPopup(auth, provider);
         console.log(result);
         try {
-            const { data } = await axios.post("http://localhost:8080/api/auth/google-auth",
+            const { data } = await axios.post(`${serverUrl}/api/auth/google-auth`,
                 {
                     fullName: result.user.displayName,
                     email: result.user.email,

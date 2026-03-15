@@ -29,6 +29,7 @@ function Navbar() {
             console.log(result?.data)
         dispatch(setSearchItems(result?.data?.items));
         } catch (err) {
+            console.log("hello")
             console.log(err?.response?.data?.message);
         }
     }
@@ -44,7 +45,7 @@ function Navbar() {
         }, [query])
 const handleLogOut = async () => {
     try {
-        const res = await axios.get('http://localhost:8080/api/auth/signOut', {
+        const res = await axios.get(`${serverUrl}/api/auth/signOut`, {
             withCredentials: true
         })
         dispatch(setUserData(null))

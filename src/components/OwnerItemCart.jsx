@@ -6,6 +6,7 @@ import { FaPen } from "react-icons/fa";
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setMyShopData } from '../redux/shopSlice';
+import { serverUrl } from '../App';
 
 
 
@@ -15,7 +16,7 @@ function OwnerItemCard({ data }) {
     const dispatch = useDispatch();
     const handleDelete = async () => {
         try {
-            const result = await axios.get(`http://localhost:8080/api/item/delete/${data._id}`, { withCredentials: true });
+            const result = await axios.get(`${serverUrl}/api/item/delete/${data._id}`, { withCredentials: true });
             console.log(result.data)
             dispatch(setMyShopData(result.data.shop))
         } catch (err) {

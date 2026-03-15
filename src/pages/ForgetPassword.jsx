@@ -5,6 +5,7 @@ import { IoEye } from "react-icons/io5";
 import { IoMdEyeOff } from "react-icons/io";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import axios from 'axios';
+import { serverUrl } from '../App';
 
 
 const ForgetPassword = () => {
@@ -34,7 +35,7 @@ const ForgetPassword = () => {
         }
         try {
             setIsLoading1(true);
-            const result = await axios.post("http://localhost:8080/api/auth/send-otp", { email }, { withCredentials: true })
+            const result = await axios.post(`${serverUrl}/api/auth/send-otp`, { email }, { withCredentials: true })
             console.log(result);
             setErr("");
             setStep(2);
@@ -54,7 +55,7 @@ const ForgetPassword = () => {
         // }
         try {
             setIsLoading2(true);
-            const result = await axios.post("http://localhost:8080/api/auth/verify-otp", { email, otp }, { withCredentials: true })
+            const result = await axios.post(`${serverUrl}/api/auth/verify-otp`, { email, otp }, { withCredentials: true })
             console.log(result);
             setErr("");
             setStep(3);
@@ -77,7 +78,7 @@ const ForgetPassword = () => {
         // }
         try {
             setIsLoading3(true);
-            const result = await axios.post("http://localhost:8080/api/auth/reset-password", { email, newPassword, confirmPassword }, { withCredentials: true })
+            const result = await axios.post(`${serverUrl}/api/auth/reset-password`, { email, newPassword, confirmPassword }, { withCredentials: true })
             console.log(result);
             setEmail("");
             setErr("");

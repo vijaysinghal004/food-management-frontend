@@ -34,7 +34,7 @@ const Signin = () => {
     const handleSignup = async (e) => {
         e.preventDefault();
         try {
-            const result = await axios.post(`http://localhost:8080/api/auth/signin`,
+            const result = await axios.post(`${serverUrl}/api/auth/signin`,
                 {
                     email,
                     password,
@@ -58,7 +58,7 @@ const Signin = () => {
         const result = await signInWithPopup(auth, provider);
         console.log(result);
         try {
-            const { data } = await axios.post("http://localhost:8080/api/auth/google-authlogin",
+            const { data } = await axios.post(`${serverUrl}/api/auth/google-authlogin`,
                 {
                     fullName: result.user.displayName,
                     email: result.user.email,

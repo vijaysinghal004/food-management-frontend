@@ -8,6 +8,7 @@ import { LuLoaderCircle } from "react-icons/lu";
 // import { setCurrAddress } from '../redux/userSlice';
 import axios from 'axios';
 import { setMyShopData } from '../redux/shopSlice';
+import { serverUrl } from '../App';
 
 const EditItem = () => {
     const navigate = useNavigate();
@@ -58,7 +59,7 @@ const EditItem = () => {
             if (backendImage) {
                 formData.append("image", backendImage)
             }
-            const result = await axios.post(`http://localhost:8080/api/item/edit-item/${itemId}`, formData, { withCredentials: true })
+            const result = await axios.post(`${serverUrl}/api/item/edit-item/${itemId}`, formData, { withCredentials: true })
             console.log(result.data.shop);
             dispatch(setMyShopData(result.data.shop));
             setLoading(false);
@@ -73,7 +74,7 @@ const EditItem = () => {
     useEffect(() => {
         const handleGetItemById = async () => {
             try {
-                const result = await axios.get(`http://localhost:8080/api/item/get-item-by-id/${itemId}`, { withCredentials: true });
+                const result = await axios.get(`${serverUrl}/api/item/get-item-by-id/${itemId}`, { withCredentials: true });
                 setCurrentItem(result.data.item)
                 console.log(result.data);
             } catch (err) {

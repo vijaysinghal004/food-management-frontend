@@ -7,6 +7,7 @@ import { FaUtensils } from "react-icons/fa";
 import axios from 'axios';
 import { setMyShopData } from '../redux/shopSlice';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { serverUrl } from '../App';
 
 const AddItem = () => {
     const navigate = useNavigate();
@@ -56,7 +57,7 @@ const AddItem = () => {
             if (backendImage) {
                 formData.append("image", backendImage)
             }
-            const result = await axios.post("http://localhost:8080/api/item/add-item", formData, { withCredentials: true })
+            const result = await axios.post(`${serverUrl}/api/item/add-item`, formData, { withCredentials: true })
             console.log(result.data.shop);
             dispatch(setMyShopData(result.data.shop));
         setLoading(false);

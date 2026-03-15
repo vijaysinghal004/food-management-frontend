@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from"react-redux"
 import { setMyShopData } from "../redux/shopSlice";
 import { useEffect } from "react";
 import { setItemInMyCity, setMyOrders, setShopInMyCity } from "../redux/userSlice";
+import { serverUrl } from "../App";
 
  function UseGetMyOrders(){
 
@@ -16,7 +17,7 @@ import { setItemInMyCity, setMyOrders, setShopInMyCity } from "../redux/userSlic
 
     const fetchOrders=async()=>{
         try{
-      const result=await axios.get(`http://localhost:8080/api/order/my-orders`,{withCredentials:true})
+      const result=await axios.get(`${serverUrl}/api/order/my-orders`,{withCredentials:true})
       dispatch(setMyOrders(result.data.orders))
       console.log(result.data.orders)
         }catch(err){

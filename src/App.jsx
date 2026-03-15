@@ -25,7 +25,8 @@ import { linkWithCredential } from 'firebase/auth';
 import { io } from 'socket.io-client';
 
 import { setSocket } from './redux/userSlice.jsx';
-export const serverUrl = 'http://localhost:8080';
+// export const serverUrl = 'http://localhost:8080';
+export const serverUrl = 'https://food-management-backend-zh12.onrender.com';
 const App = () => {
   useGetCurrentUser();
   UseGetCity();

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from"react-redux"
 import { setMyShopData } from "../redux/shopSlice";
 import { useEffect } from "react";
 import { setItemInMyCity, setShopInMyCity } from "../redux/userSlice";
+import { serverUrl } from "../App";
 
  function UseGetItemByCity(){
 
@@ -16,7 +17,7 @@ import { setItemInMyCity, setShopInMyCity } from "../redux/userSlice";
 
     const fetchItems=async()=>{
         try{
-      const result=await axios.get(`http://localhost:8080/api/item/get-item-by-city/${city}`,{withCredentials:true})
+      const result=await axios.get(`${serverUrl}/api/item/get-item-by-city/${city}`,{withCredentials:true})
       dispatch(setItemInMyCity(result.data.items))
       console.log(result.data.items)
         }catch(err){

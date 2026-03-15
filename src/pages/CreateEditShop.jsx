@@ -7,6 +7,7 @@ import { FaUtensils } from "react-icons/fa";
 import axios from 'axios';
 import { setMyShopData } from '../redux/shopSlice';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { serverUrl } from '../App';
 
 
 const CreateEditShop = () => {
@@ -40,7 +41,7 @@ const CreateEditShop = () => {
             if (backendImage) {
                 formData.append("image", backendImage)
             }
-            const result = await axios.post("http://localhost:8080/api/shop/create-edit", formData, { withCredentials: true })
+            const result = await axios.post(`${serverUrl}/api/shop/create-edit`, formData, { withCredentials: true })
             console.log(result.data);
             dispatch(setMyShopData(result.data.shop));
             setLoading(false);
